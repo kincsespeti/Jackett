@@ -126,9 +126,13 @@ namespace Jackett.Common.Indexers
 
                 ReleaseInfo release;
                 var rows = dom[".box_torrent_all"].Find(".box_torrent");
-
-                // Check torrents only till we reach the query Limit 
-                for(int i=0; (i<rows.Length && ((already_founded + releases.Count) < limit )); i++)
+		var offset = 0;
+                if(query.Offset != null && query.Offset>0)
+                {
+                    offset = query.Offset;
+                }
+                // Check torrents only till we reach the query Limit [starting from the remaining offset value]
+                for(int i==offset; (i<rows.Length && ((already_founded + releases.Count) < limit )); i++)
                 { 
                     try
                     {
@@ -213,6 +217,7 @@ namespace Jackett.Common.Indexers
                                 releases.Add(release);
                             }
                         }
+			query.Offset -= rows.Length;
                     }
                     catch (FormatException ex)
                     { 
